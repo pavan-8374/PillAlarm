@@ -1,38 +1,54 @@
 package com.example.pillalarm.ui.screen
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import kotlinx.coroutines.delay
 
-@androidx.compose.ui.tooling.preview.Preview(showBackground = true)
 @Composable
-fun SplashPreview() {
-    com.example.pillalarm.ui.theme.PillAlarmTheme {
-        SplashScreen(onTimeout = {})
-    }
-}
-@Composable
-fun SplashScreen(onTimeout: () -> Unit) {
-    // Run side-effect when the composable first appears
+fun SplashScreen(onSplashFinished: () -> Unit) {
+    var visible by remember { mutableStateOf(true) }
+
     LaunchedEffect(Unit) {
-        delay(9000) // ⏳ Wait 9 seconds
-        onTimeout() // Then call the callback to move forward
+        delay(3000) // Show for 2 seconds
+        visible = false
+        delay(300)
+        onSplashFinished()
     }
 
-    // UI of splash screen
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+    AnimatedVisibility(
+        visible = visible,
+        enter = fadeIn(animationSpec = tween(800)),
+        exit = fadeOut(animationSpec = tween(500))
     ) {
-        Text(
-            text = "Pill Alarm",
-            style = MaterialTheme.typography.headlineLarge,
-            color = MaterialTheme.colorScheme.primary
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "Pill Alarm",
+                fontSize = 36.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
     }
 }
+    @Preview(showBackground = true)
+    @Composable
+    fun SplashScreenPreview() {
+        MaterialTheme {
+            SplashScreen(onSplashFinished = {})
+        }
+    }
+

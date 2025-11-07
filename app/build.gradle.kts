@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
-    // You may not need this 'kotlin.compose' plugin if you use the compose compiler
 }
 
 android {
@@ -53,7 +52,7 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.material)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
