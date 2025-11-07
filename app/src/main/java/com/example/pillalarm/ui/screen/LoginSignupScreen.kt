@@ -1,4 +1,4 @@
-package com.example.pillalarm
+package com.example.pillalarm.ui.screen
 
 import android.os.Bundle
 import android.util.Log
@@ -40,7 +40,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.pillalarm.ui.theme.PillAlarmTheme // Make sure this import matches your theme package
+import com.example.pillalarm.ui.theme.PillAlarmTheme
 
 // This is my main activity.
 class LoginSignupScreenActivity : ComponentActivity() {
@@ -138,7 +138,8 @@ fun LoginSignupScreen() {
     fun handleLogin() {
         if (!validateInput(isLogin = true)) return
 
-        // Add your actual Login logic here (e.g., Firebase Auth)
+        // Need to add Firebase Auth actual Sign Up logic here
+
         Log.d("LoginSignupScreen", "Attempting login with Email: $email, Pass: $password")
         Toast.makeText(context, "Login Successful (simulation)", Toast.LENGTH_SHORT).show()
         // Here you would navigate to your app's main screen
@@ -147,7 +148,7 @@ fun LoginSignupScreen() {
     fun handleSignup() {
         if (!validateInput(isLogin = false)) return
 
-        // Add your actual Sign Up logic here (e.g., Firebase Auth)
+        // Need to add Firebase Auth actual Sign Up logic here
         Log.d("LoginSignupScreen", "Attempting signup with Email: $email, Pass: $password")
         Toast.makeText(context, "Sign Up Successful (simulation)", Toast.LENGTH_SHORT).show()
 
@@ -155,7 +156,7 @@ fun LoginSignupScreen() {
         isLoginMode = true
     }
 
-    //  UI LAYOUT (Composable)
+    //  ----------------   UI LAYOUT (Composable)  -----------------
     // Column arranges its children vertically
     Column(
         modifier = Modifier

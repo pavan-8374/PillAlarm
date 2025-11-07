@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.PillAlarm" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Base app theme for Jetpack Compose (Material 3) -->
+    <style name="Theme.PillAlarm" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:statusBarColor">@color/purple_700</item>
+        <item name="android:navigationBarColor">@color/purple_700</item>
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="Theme.PillAlarm.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash_screen</item>
+        <item name="postSplashScreenTheme">@style/Theme.PillAlarm</item>
+    </style>
+
 </resources>
