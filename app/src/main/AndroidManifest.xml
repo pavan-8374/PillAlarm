@@ -9,10 +9,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.PillAlarm">
-
+        android:theme="@style/Theme.PillAlarm.Splash">
         <activity
-            android:name=".LoginSignupScreenActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.PillAlarm">
             <intent-filter>
