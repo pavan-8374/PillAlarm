@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Background color -->
-    <item android:drawable="@color/white" />
+    <!--- Background color -->
+    <item android:drawable="@color/white"/>
 
-    <!-- Centered app icon -->
+    <!--- Centered app icon -->
     <item>
         <bitmap
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:gravity="center"
             android:src="@mipmap/ic_launcher" />
     </item>

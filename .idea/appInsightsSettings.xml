@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.pillalarm" />
+                  <option name="mobileSdkAppId" value="1:312661301519:android:1660df582903a25267067a" />
+                  <option name="projectId" value="pill-alarm-54836" />
+                  <option name="projectNumber" value="312661301519" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
