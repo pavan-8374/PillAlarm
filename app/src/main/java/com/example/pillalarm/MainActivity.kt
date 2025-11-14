@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+
 // Importing the SplashScreen and loginScreen.kt file from the ui.screen package
 import com.example.pillalarm.ui.screen.SplashScreen
 import com.example.pillalarm.ui.screen.LoginScreen
@@ -28,7 +29,7 @@ class LoginSignupScreenActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Define 'showSplash'
+                    // This shows the splash screen at the starting of the application.
                     var showSplash by remember { mutableStateOf(true) }
 
                     // This state now controls which one login/signup screen to visible
@@ -44,7 +45,7 @@ class LoginSignupScreenActivity : ComponentActivity() {
                         )
                     }
                     else if (isLoginMode) {
-                        // Show LoginScreen
+                        // This show Login Screen
                         LoginScreen(
                             onNavigateToSignUp = {
                                 // When user clicks Sign Up, set mode to false
@@ -52,7 +53,7 @@ class LoginSignupScreenActivity : ComponentActivity() {
                             }
                         )
                     } else {
-                        // Show SignupScreen
+                        // This show Signup Screen
                         SignupScreen(
                             onNavigateToLogin = {
                                 // When user clicks Login, set mode to true

@@ -1,5 +1,6 @@
 package com.example.pillalarm.ui.screen
 
+// I am importing the necessary libraries which are essential for my login screen implementation.
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
@@ -86,7 +87,7 @@ fun LoginScreen(
         // Here you would navigate to your app's main screen
     }
 
-    //  ----------------  THIS IS  UI LAYOUT (Composable)  -----------------
+    //  ----------------  This is UI layout (Composable)  -----------------
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -168,7 +169,7 @@ fun LoginScreen(
         }
     }
 }
-
+//This shows the preview of the login screen
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
