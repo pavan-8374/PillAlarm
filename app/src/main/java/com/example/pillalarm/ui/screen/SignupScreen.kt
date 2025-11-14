@@ -87,12 +87,11 @@ fun SignupScreen(
         return isValid
     }
 
-    //  ACTION HANDLERS
+    //  Action handlers
     fun handleSignup() {
         if (!validateInput()) return
 
         // I need to add Firebase Auth actual Sign Up logic here
-        // (You would add your Firebase.auth.createUserWithEmail... code here)
 
         Log.d("SignupScreen", "Attempting signup with Email: $email, Pass: $password")
         Toast.makeText(context, "Sign Up Successful (simulation)", Toast.LENGTH_SHORT).show()
