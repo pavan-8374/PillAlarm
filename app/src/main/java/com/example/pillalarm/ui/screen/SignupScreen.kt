@@ -1,5 +1,6 @@
 package com.example.pillalarm.ui.screen
 
+// I am importing the necessary libraries which are essential for my Signup screen implementation.
 import android.util.Log
 import android.util.Patterns
 import android.widget.Toast
@@ -42,7 +43,7 @@ import com.example.pillalarm.ui.theme.PillAlarmTheme
 fun SignupScreen(
     onNavigateToLogin: () -> Unit // This function will be passed in to handle navigation
 ) {
-    // --- STATE MANAGEMENT ---
+    // --- State management ---
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -54,7 +55,7 @@ fun SignupScreen(
 
     val context = LocalContext.current
 
-    // VALIDATION LOGIC
+    // Signup validation logic
     fun validateInput(): Boolean {
         emailError = null
         passwordError = null
@@ -100,7 +101,7 @@ fun SignupScreen(
         onNavigateToLogin()
     }
 
-    //  ----------------   UI LAYOUT (Composable)  -----------------
+    //  ----------------   UI layout (Composable)  -----------------
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -208,7 +209,7 @@ fun SignupScreen(
         }
     }
 }
-
+// This shows the preview of the signup screen
 @Preview(showBackground = true)
 @Composable
 fun SignupScreenPreview() {

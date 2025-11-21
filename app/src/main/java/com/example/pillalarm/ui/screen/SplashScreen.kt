@@ -68,6 +68,7 @@ fun SplashScreen(onSplashFinished: () -> Unit) {
         }
     }
 }
+// This shows the preview of the splash screen
     @Preview(showBackground = true)
     @Composable
     fun SplashScreenPreview() {
