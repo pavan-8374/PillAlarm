@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import com.example.pillalarm.ui.theme.PillAlarmTheme
 
 @Composable
@@ -92,13 +93,22 @@ fun SignupScreen(
     fun handleSignup() {
         if (!validateInput()) return
 
-        // I need to add Firebase Auth actual Sign Up logic here
+        val auth = FirebaseAuth.getInstance()
 
-        Log.d("SignupScreen", "Attempting signup with Email: $email, Pass: $password")
-        Toast.makeText(context, "Sign Up Successful (simulation)", Toast.LENGTH_SHORT).show()
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(context, "Signup Successful!", Toast.LENGTH_SHORT).show()
+                    Log.d("SignupScreen", "Signup successful for email: $email")
 
-        // After sign up, navigate to login
-        onNavigateToLogin()
+                    // Navigate to login screen
+                    onNavigateToLogin()
+                } else {
+                    val message = task.exception?.message ?: "Signup failed"
+                    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                    Log.e("SignupScreen", "Signup error: $message")
+                }
+            }
     }
 
     //  ----------------   UI layout (Composable)  -----------------
