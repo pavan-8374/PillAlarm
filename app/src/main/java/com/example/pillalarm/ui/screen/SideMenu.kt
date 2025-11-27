@@ -11,13 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
+import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun SideMenu(
     username: String,
     onLogout: () -> Unit,
     onMyMedicines: () -> Unit = {},
-    onProfile: () -> Unit = {}
+    onProfile: () -> Unit = {},
+    onHome: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -40,22 +43,24 @@ fun SideMenu(
         Spacer(Modifier.height(24.dp))
 
         // Menu Items
-        DrawerItem("Home", Icons.Default.Home, onClick = { /* navigate */ },
-        textColor = Color.White, iconTint = Color.White)
+        DrawerItem("Home", Icons.Default.Home, onClick = onHome,
+            textColor = Color.White, iconTint = Color.White)
         DrawerItem("My Medicines", Icons.Default.Medication, onMyMedicines,Color.White, iconTint = Color.White)
         DrawerItem("Profile", Icons.Default.Person, onProfile, Color.White, iconTint = Color.White)
 
         Spacer(Modifier.weight(1f))
 
         // Sign out Button
-        Button(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
+        Button(onClick = {
+            FirebaseAuth.getInstance().signOut()
+            onLogout()})
+        {
             Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
             Spacer(Modifier.width(8.dp))
-            Text("Sign Out")
+            Text("Sign Out From Account")
         }
     }
 }
-
 @Composable
 fun DrawerItem(title: String, icon: ImageVector,
                onClick: () -> Unit,
@@ -66,10 +71,23 @@ fun DrawerItem(title: String, icon: ImageVector,
         onClick = onClick,
         modifier = Modifier.fillMaxWidth()
     ) {
-        TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
-            Icon(imageVector = icon, contentDescription = title, tint = iconTint)
-            Spacer(Modifier.width(12.dp))
-            Text(title, color = textColor)
-        }
+        Icon(imageVector = icon, contentDescription = title, tint = iconTint)
+        Spacer(Modifier.width(12.dp))
+        Text(title, color = textColor)
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun DrawerItemPreview() {
+    Surface {
+        DrawerItem(
+            title = "Home",
+            icon = Icons.Default.Home,
+            onClick = {},
+            textColor = Color.White,
+            iconTint = Color.White
+        )
+    }
+}
+
