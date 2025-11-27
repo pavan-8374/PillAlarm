@@ -12,10 +12,13 @@ import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(onLogout: () -> Unit = {}) {
+fun HomeScreen (navController: NavController){
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val user = FirebaseAuth.getInstance().currentUser
@@ -26,12 +29,19 @@ fun HomeScreen(onLogout: () -> Unit = {}) {
         drawerContent = {
             SideMenu(
                 username = username,
+                onHome = {
+                    scope.launch { drawerState.close() }
+                },
                 onLogout = {
                     FirebaseAuth.getInstance().signOut()
-                    onLogout()
+                    navController.navigate("login") {
+                        popUpTo(0)        // Clears entire backstack
+                        launchSingleTop = true
+                    }
+                    scope.launch { drawerState.close() } // Close drawer after navigating
                 },
-                onMyMedicines = { /* Navigate later */ },
-                onProfile = { /* Navigate later */ }
+                        onMyMedicines = { /* Navigate later */ },
+                        onProfile = { /* Navigate later */ }
             )
         }
     ) {
@@ -66,6 +76,6 @@ fun HomeScreen(onLogout: () -> Unit = {}) {
 @Composable
 fun HomeScreenPreview() {
     PillAlarmTheme {
-        HomeScreen()
+        HomeScreen(navController = rememberNavController())
     }
 }

@@ -40,6 +40,5 @@ class FakeAuthRepository(
         if (!succeed) {
             throw FirebaseAuthException("ERROR", "Fake login failed")
         }
-        // Simulate success (no-op)
     }
 }
