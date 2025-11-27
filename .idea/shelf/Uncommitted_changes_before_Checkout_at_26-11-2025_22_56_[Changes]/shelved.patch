@@ -1,0 +1,104 @@
+Index: .idea/dictionaries/project.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><component name=\"ProjectDictionaryState\">\r\n  <dictionary name=\"project\">\r\n    <words>\r\n      <w>pillalarm</w>\r\n    </words>\r\n  </dictionary>\r\n</component>
+===================================================================
+diff --git a/.idea/dictionaries/project.xml b/.idea/dictionaries/project.xml
+--- a/.idea/dictionaries/project.xml	(revision f81afd20ac491fbfa2b5348ad42dac2d82e1e4dd)
++++ b/.idea/dictionaries/project.xml	(date 1763898830319)
+@@ -1,7 +1,9 @@
+ <component name="ProjectDictionaryState">
+   <dictionary name="project">
+     <words>
++      <w>pavan</w>
+       <w>pillalarm</w>
++      <w>rallapalli</w>
+     </words>
+   </dictionary>
+ </component>
+\ No newline at end of file
+Index: app/src/main/java/com/example/pillalarm/ui/screen/SideMenu.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.pillalarm.ui.screen\r\n\r\nimport androidx.compose.ui.graphics.Color\r\nimport androidx.compose.foundation.background\r\nimport androidx.compose.foundation.layout.*\r\nimport androidx.compose.material.icons.Icons\r\nimport androidx.compose.material.icons.automirrored.filled.Logout\r\nimport androidx.compose.material.icons.filled.*\r\nimport androidx.compose.material3.*\r\nimport androidx.compose.runtime.Composable\r\nimport androidx.compose.ui.Modifier\r\nimport androidx.compose.ui.graphics.vector.ImageVector\r\nimport androidx.compose.ui.unit.dp\r\n\r\n@Composable\r\nfun SideMenu(\r\n    username: String,\r\n    onLogout: () -> Unit,\r\n    onMyMedicines: () -> Unit = {},\r\n    onProfile: () -> Unit = {}\r\n) {\r\n    Column(\r\n        modifier = Modifier\r\n            .fillMaxSize()\r\n            .background(MaterialTheme.colorScheme.primary)\r\n            .padding(20.dp),\r\n        verticalArrangement = Arrangement.Top\r\n    ) {\r\n\r\n        // Profile Icon + Username will be added here\r\n        Icon(\r\n            imageVector = Icons.Default.AccountCircle,\r\n            contentDescription = \"Profile Icon\",\r\n            modifier = Modifier.size(64.dp)\r\n        )\r\n        Text(text = username, style = MaterialTheme.typography.titleLarge)\r\n\r\n        Spacer(Modifier.height(24.dp))\r\n        HorizontalDivider()\r\n        Spacer(Modifier.height(24.dp))\r\n\r\n        // Menu Items\r\n        DrawerItem(\"Home\", Icons.Default.Home, onClick = { /* navigate */ },\r\n        textColor = Color.White, iconTint = Color.White)\r\n        DrawerItem(\"My Medicines\", Icons.Default.Medication, onMyMedicines,Color.White, iconTint = Color.White)\r\n        DrawerItem(\"Profile\", Icons.Default.Person, onProfile, Color.White, iconTint = Color.White)\r\n\r\n        Spacer(Modifier.weight(1f))\r\n\r\n        // Sign out Button\r\n        Button(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {\r\n            Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = \"Logout\")\r\n            Spacer(Modifier.width(8.dp))\r\n            Text(\"Sign Out\")\r\n        }\r\n    }\r\n}\r\n\r\n@Composable\r\nfun DrawerItem(title: String, icon: ImageVector,\r\n               onClick: () -> Unit,\r\n               textColor: Color = Color.Black,\r\n               iconTint: Color = Color.Black\r\n) {\r\n    TextButton(\r\n        onClick = onClick,\r\n        modifier = Modifier.fillMaxWidth()\r\n    ) {\r\n        TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {\r\n            Icon(imageVector = icon, contentDescription = title, tint = iconTint)\r\n            Spacer(Modifier.width(12.dp))\r\n            Text(title, color = textColor)\r\n        }\r\n    }\r\n}\r\n
+===================================================================
+diff --git a/app/src/main/java/com/example/pillalarm/ui/screen/SideMenu.kt b/app/src/main/java/com/example/pillalarm/ui/screen/SideMenu.kt
+--- a/app/src/main/java/com/example/pillalarm/ui/screen/SideMenu.kt	(revision f81afd20ac491fbfa2b5348ad42dac2d82e1e4dd)
++++ b/app/src/main/java/com/example/pillalarm/ui/screen/SideMenu.kt	(date 1763928792399)
+@@ -11,13 +11,16 @@
+ import androidx.compose.ui.Modifier
+ import androidx.compose.ui.graphics.vector.ImageVector
+ import androidx.compose.ui.unit.dp
++import com.google.firebase.auth.FirebaseAuth
++import androidx.compose.ui.tooling.preview.Preview
+ 
+ @Composable
+ fun SideMenu(
+     username: String,
+     onLogout: () -> Unit,
+     onMyMedicines: () -> Unit = {},
+-    onProfile: () -> Unit = {}
++    onProfile: () -> Unit = {},
++    onHome: () -> Unit
+ ) {
+     Column(
+         modifier = Modifier
+@@ -40,7 +43,7 @@
+         Spacer(Modifier.height(24.dp))
+ 
+         // Menu Items
+-        DrawerItem("Home", Icons.Default.Home, onClick = { /* navigate */ },
++        DrawerItem("Home", Icons.Default.Home, onClick = onHome,
+         textColor = Color.White, iconTint = Color.White)
+         DrawerItem("My Medicines", Icons.Default.Medication, onMyMedicines,Color.White, iconTint = Color.White)
+         DrawerItem("Profile", Icons.Default.Person, onProfile, Color.White, iconTint = Color.White)
+@@ -48,14 +51,16 @@
+         Spacer(Modifier.weight(1f))
+ 
+         // Sign out Button
+-        Button(onClick = onLogout, modifier = Modifier.fillMaxWidth()) {
++        Button(onClick = {
++            FirebaseAuth.getInstance().signOut()
++            onLogout()})
++        {
+             Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
+-            Spacer(Modifier.width(8.dp))
+-            Text("Sign Out")
++            Spacer(Modifier.width(10.dp))
++            Text("Sign Out From Account")
+         }
+     }
+ }
+-
+ @Composable
+ fun DrawerItem(title: String, icon: ImageVector,
+                onClick: () -> Unit,
+@@ -66,10 +71,23 @@
+         onClick = onClick,
+         modifier = Modifier.fillMaxWidth()
+     ) {
+-        TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
+-            Icon(imageVector = icon, contentDescription = title, tint = iconTint)
+-            Spacer(Modifier.width(12.dp))
+-            Text(title, color = textColor)
+-        }
++        Icon(imageVector = icon, contentDescription = title, tint = iconTint)
++        Spacer(Modifier.width(12.dp))
++        Text(title, color = textColor)
++    }
++}
++
++@Preview(showBackground = true)
++@Composable
++fun DrawerItemPreview() {
++    Surface {
++        DrawerItem(
++            title = "Home",
++            icon = Icons.Default.Home,
++            onClick = {},
++            textColor = Color.White,
++            iconTint = Color.White
++        )
+     }
+ }
++
