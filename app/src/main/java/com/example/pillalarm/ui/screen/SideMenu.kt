@@ -56,8 +56,8 @@ fun SideMenu(
             onLogout()})
         {
             Icon(imageVector = Icons.AutoMirrored.Filled.Logout, contentDescription = "Logout")
-            Spacer(Modifier.width(8.dp))
-            Text("Sign Out From Account")
+            Spacer(Modifier.width(12.dp))
+            Text("Sign Out From App")
         }
     }
 }
