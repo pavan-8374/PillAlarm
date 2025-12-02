@@ -65,6 +65,7 @@ dependencies {
     //--- FIRESTORE version catalog usage ---
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+    implementation(libs.coil.compose)
 
 
     // --- ANDROIDX / COMPOSE ---
