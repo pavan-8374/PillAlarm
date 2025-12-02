@@ -18,12 +18,18 @@ credentialsPlayServicesAuth = "1.5.0"
 googleid = "1.1.1"
 firebaseAuth = "24.0.1"
 compose = "1.9.5"
+firebasestorage = "22.0.1"
+firestore = "26.0.2"
+coil ="2.7.0"
 
 
 [libraries]
+firebase-storage = { module = "com.google.firebase:firebase-storage", version.ref = "firebasestorage" }
+firebase-firestore = { module = "com.google.firebase:firebase-firestore", version.ref = "firestore" }
 navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigation" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
+coil-compose = {group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kotlinx-coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutinesPlayServices" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }

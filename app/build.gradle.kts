@@ -61,6 +61,13 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.coroutines.play.services)
+
+    //--- FIRESTORE version catalog usage ---
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.storage)
+    implementation(libs.coil.compose)
+
+
     // --- ANDROIDX / COMPOSE ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
