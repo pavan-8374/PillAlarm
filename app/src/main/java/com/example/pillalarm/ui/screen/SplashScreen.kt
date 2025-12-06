@@ -19,18 +19,23 @@ import androidx.compose.foundation.Image // Import the Image composable
 import androidx.compose.ui.res.painterResource // Import the painter resource
 import androidx.compose.ui.unit.dp
 import com.example.pillalarm.R // To import my project file
-
+import com.google.firebase.auth.FirebaseAuth
 
 
 @Composable
-fun SplashScreen(onSplashFinished: () -> Unit) {
+fun SplashScreen(onSplashFinished: (String) -> Unit) {
     var visible by remember { mutableStateOf(true) }
+    val user = FirebaseAuth.getInstance().currentUser
 
     LaunchedEffect(Unit) {
-        delay(8000) // my splash screen Show for 8 seconds
+        delay(3000) // my splash screen Show for 3 seconds
         visible = false
-        delay(800)
-        onSplashFinished()
+        delay(200)
+        if (user != null) {
+            onSplashFinished("home")
+        } else {
+            onSplashFinished("login")
+        }
     }
 
     AnimatedVisibility(
