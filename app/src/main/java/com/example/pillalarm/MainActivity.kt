@@ -1,8 +1,10 @@
 package com.example.pillalarm
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -15,11 +17,13 @@ import com.example.pillalarm.auth.LoginViewModel
 import com.example.pillalarm.ui.screen.LoginScreen
 import com.example.pillalarm.ui.screen.SignupScreen
 import com.example.pillalarm.ui.screen.SplashScreen
+import com.example.pillalarm.ui.screen.MyMedicinesScreen
 import com.example.pillalarm.ui.screen.HomeScreen
 import com.example.pillalarm.ui.theme.PillAlarmTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,13 +43,11 @@ class MainActivity : ComponentActivity() {
                         startDestination = "splash"
                     ) {
                         composable("splash") {
-                            SplashScreen(
-                                onSplashFinished = {
-                                    navController.navigate("login") {
-                                        popUpTo("splash") { inclusive = true }
-                                    }
+                            SplashScreen { destination ->
+                                navController.navigate(destination) {
+                                    popUpTo("splash") { inclusive = true }
                                 }
-                            )
+                            }
                         }
                         composable("login") {
                             val loginVm: LoginViewModel = viewModel(factory = factory)
@@ -70,6 +72,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("home") {
                             HomeScreen(navController = navController)
+                        }
+                        composable("my_medicines") {
+                            MyMedicinesScreen(navController)
                         }
                     }
                 }
