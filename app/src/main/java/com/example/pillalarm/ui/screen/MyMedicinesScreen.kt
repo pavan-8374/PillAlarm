@@ -66,7 +66,10 @@ fun MyMedicinesScreen(navController: NavController) {
                     items(medicineList) { medicine ->
                         MedicineCard(
                             medicine = medicine,
-                            onDelete = {
+                            onAlarmSave = { newAlarmTime ->
+                                MedicineRepository.updateAlarm(medicine.id, newAlarmTime)
+                            },
+                            onDeleteConfirmed = {
                                 MedicineRepository.delete(medicine.id)
                             }
                         )
