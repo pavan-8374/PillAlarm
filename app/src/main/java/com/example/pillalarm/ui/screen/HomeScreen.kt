@@ -41,7 +41,7 @@ fun HomeScreen(navController: NavController) {
     var capturedImageUri by remember { mutableStateOf<Uri?>(null) }
     var tempUri by remember { mutableStateOf<Uri?>(null) }
 
-    /** Fetch medicines (REAL-TIME) */
+    // Fetch medicines from Firestore
     LaunchedEffect(Unit) {
         val userId = user?.uid
         if (userId != null) {
@@ -60,7 +60,7 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    /** Camera Launcher */
+    // Camera Launcher to take medicine image
     val cameraLauncher =
         rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
             if (success && tempUri != null) {
@@ -131,9 +131,12 @@ fun HomeScreen(navController: NavController) {
                 } else {
                     LazyRow {
                         items(medicineList) { med ->
-                            MedicineCard(med) {
-                                MedicineRepository.delete(med.id)
-                            }
+                            MedicineCard(
+                                medicine = med,
+                                onDeleteConfirmed = { MedicineRepository.delete(med.id) },
+                                onAlarmSave = { t -> MedicineRepository.updateAlarm(med.id, t) }
+                            )
+
                         }
                     }
                 }
@@ -141,7 +144,7 @@ fun HomeScreen(navController: NavController) {
         }
     }
 
-    /** Show Name Dialog */
+    // Show Name Dialog
     if (showNameDialog && capturedImageUri != null) {
         MedicineDetailsDialog(
             onDismiss = { showNameDialog = false },
