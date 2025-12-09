@@ -3,6 +3,7 @@ package com.example.pillalarm.ui.screen
 import android.Manifest
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -44,6 +45,7 @@ fun HomeScreen(navController: NavController) {
     // Fetch medicines from Firestore
     LaunchedEffect(Unit) {
         val userId = user?.uid
+        Log.d("DEBUG_UID", "Current App User ID: $userId")
         if (userId != null) {
             FirebaseFirestore.getInstance().collection("medicines")
                 .whereEqualTo("userId", userId)
@@ -109,7 +111,7 @@ fun HomeScreen(navController: NavController) {
             },
             topBar = {
                 TopAppBar(
-                    title = { Text("Pill Alarm Home") },
+                    title = { Text("   Visual Pill Alarm ") },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(Icons.Default.Menu, null)
@@ -133,8 +135,8 @@ fun HomeScreen(navController: NavController) {
                         items(medicineList) { med ->
                             MedicineCard(
                                 medicine = med,
-                                onDeleteConfirmed = { MedicineRepository.delete(med.id) },
-                                onAlarmSave = { t -> MedicineRepository.updateAlarm(med.id, t) }
+                                onAlarmSave = { t -> MedicineRepository.updateAlarm(med.id, t) },
+                                onDeleteConfirmed = { MedicineRepository.delete(med.id) }
                             )
 
                         }

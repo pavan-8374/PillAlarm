@@ -9,7 +9,7 @@ import androidx.annotation.RequiresApi
 
 object AlarmScheduler {
 
-    @RequiresApi(Build.VERSION_CODES.S)
+   @RequiresApi(Build.VERSION_CODES.S)
     fun schedule(context: Context, name: String, time: Long) {
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("name", name)

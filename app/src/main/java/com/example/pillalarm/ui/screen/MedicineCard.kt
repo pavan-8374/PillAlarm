@@ -45,11 +45,16 @@ fun MedicineCard(
             // FRONT
             FrontSide(medicine)
         } else {
+            Box(
+                modifier = Modifier.graphicsLayer {
+                    rotationY = 180f        // FIX TEXT MIRRORING
+                }
+            ){
             // BACK MENU
             BackSide(
                 onAlarmClick = { showAlarmDialog = true },
                 onDeleteClick = { showDeleteDialog = true }
-            )
+            )}
         }
     }
 
@@ -96,7 +101,7 @@ fun FrontSide(medicine: Medicine) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(110.dp),
+                .height(100.dp),
             contentScale = ContentScale.Crop
         )
 
