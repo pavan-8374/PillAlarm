@@ -4,7 +4,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import androidx.annotation.RequiresApi
-import com.example.pillalarm.alarm.AlarmScheduler
+import com.example.pillalarm.alarm.AlarmScheduler // To schedule alarm
 import com.example.pillalarm.auth.ImageFiles
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,7 +34,7 @@ object MedicineRepository {
     private fun saveRecord(name: String,
                            url: String,
                            alarm: Long,
-                           onSuccess: () -> Unit
+                           onSuccess: () -> Unit = {}
     ){
         val db = FirebaseFirestore.getInstance()
         val uid = FirebaseAuth.getInstance().currentUser?.uid ?: return

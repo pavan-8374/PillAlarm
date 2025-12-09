@@ -27,11 +27,6 @@ fun MedicineDetailsDialog(
                 )
 
                 Spacer(Modifier.height(10.dp))
-
-                Text(
-                    "Alarm time will be auto-set for now",
-                    style = MaterialTheme.typography.bodySmall
-                )
             }
         },
         confirmButton = {

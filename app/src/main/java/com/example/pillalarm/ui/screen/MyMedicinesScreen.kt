@@ -22,7 +22,7 @@ fun MyMedicinesScreen(navController: NavController) {
     val medicineList = remember { mutableStateListOf<Medicine>() }
     val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-    /** Load all medicines for this user */
+    // Load all medicines for this user
     LaunchedEffect(Unit) {
         if (userId != null) {
             FirebaseFirestore.getInstance().collection("medicines")
@@ -31,11 +31,12 @@ fun MyMedicinesScreen(navController: NavController) {
                 .addSnapshotListener { snapshot, _ ->
                     snapshot ?: return@addSnapshotListener
                     medicineList.clear()
-                    snapshot.documents.forEach {
-                        it.toObject(Medicine::class.java)?.copy(id = it.id)?.let { med ->
-                            medicineList.add(med)
-                        }
+                    snapshot.documents.forEach { doc ->
+                        doc.toObject(Medicine::class.java)
+                            ?.copy(id = doc.id)
+                            ?.let { medicineList.add(it) }
                     }
+
                 }
         }
     }
