@@ -8,8 +8,9 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
@@ -103,10 +104,12 @@ fun HomeScreen(navController: NavController) {
     ) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(onClick = {
-                    permissionLauncher.launch(Manifest.permission.CAMERA)
-                }) {
-                    Icon(Icons.Default.Add, null)
+                LargeFloatingActionButton(
+                    onClick = {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                ) {
+                    Icon(Icons.Default.Add, contentDescription = null)
                 }
             },
             topBar = {
@@ -125,23 +128,34 @@ fun HomeScreen(navController: NavController) {
                     .padding(padding)
                     .padding(24.dp)
             ) {
-                Text("My Medicines", style = MaterialTheme.typography.titleLarge)
+                Text("   My Medicines", style = MaterialTheme.typography.titleLarge)
                 Spacer(Modifier.height(12.dp))
 
                 if (medicineList.isEmpty()) {
                     Text("No medicines added yet.")
-                } else {
-                    LazyRow {
-                        items(medicineList) { med ->
+            } else {
+                    LazyVerticalGrid(
+                        columns = GridCells.Adaptive(minSize = 150.dp),   //  responsive
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        items(medicineList) { medicine ->
                             MedicineCard(
-                                medicine = med,
-                                onAlarmSave = { t -> MedicineRepository.updateAlarm(med.id, t) },
-                                onDeleteConfirmed = { MedicineRepository.delete(med.id) }
+                                medicine = medicine,
+                                onDeleteConfirmed = {
+                                    MedicineRepository.delete(medicine.id)
+                                },
+                                onAlarmSaveList = { alarms ->
+                                    MedicineRepository.updateAlarm(medicine.id, alarms)
+                                }
                             )
+
 
                         }
                     }
                 }
+
             }
         }
     }

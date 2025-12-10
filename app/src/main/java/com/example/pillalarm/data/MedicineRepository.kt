@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.pillalarm.alarm.AlarmScheduler // To schedule alarm
 import com.example.pillalarm.auth.ImageFiles
+import com.example.pillalarm.ui.screen.AlarmModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -50,7 +51,7 @@ object MedicineRepository {
         db.collection("medicines").add(record)
             .addOnSuccessListener { onSuccess() }
     }
-    fun updateAlarm(id: String, newAlarmTime: Long) {
+    fun updateAlarm(id: String, newAlarmTime: List<AlarmModel>) {
         FirebaseFirestore.getInstance()
             .collection("medicines")
             .document(id)
