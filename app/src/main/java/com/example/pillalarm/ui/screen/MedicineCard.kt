@@ -109,7 +109,9 @@ fun MedicineCard(
         )
 
         AlarmDialog(
-            medicineId = medicine.id, // Ensure your Medicine class has an 'id' property
+            medicineId = medicine.id, // Assuming Medicine class has an 'id' property
+            medicineName = medicine.name,
+            medicineImageUrl = medicine.imageUrl,
             viewModel = alarmViewModel,
             onDismiss = { showAlarmDialog = false }
         )
