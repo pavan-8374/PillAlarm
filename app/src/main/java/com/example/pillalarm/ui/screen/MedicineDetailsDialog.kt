@@ -9,14 +9,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MedicineDetailsDialog(
     onDismiss: () -> Unit,
-    onSave: (String, Long) -> Unit
+    onSave: (String) -> Unit
 ) {
     var name by remember { mutableStateOf("") }
-    var selectedTime by remember { mutableLongStateOf(System.currentTimeMillis()) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Enter Medicine Details") },
+        title = { Text("Enter Medicine Name") },
         text = {
             Column {
                 OutlinedTextField(
@@ -31,7 +30,7 @@ fun MedicineDetailsDialog(
         },
         confirmButton = {
             Button(
-                onClick = { onSave(name, selectedTime) },
+                onClick = { onSave(name) },
                 enabled = name.isNotBlank()
             ) { Text("Save Medicine") }
         },

@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.gms.google.services)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -87,6 +88,24 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation(libs.google.firebase.auth)
+
+    // Room
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    // ADD COMPILER HERE
+    ksp(libs.room.compiler)
+
+    // Lifecycle
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+
+    // Coroutines
+    implementation(libs.coroutines.android)
+
+    // Compose Material3
+    implementation(libs.material3)
+
+
     // --- TESTING ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
