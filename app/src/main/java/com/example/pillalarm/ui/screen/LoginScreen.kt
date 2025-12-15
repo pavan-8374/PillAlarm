@@ -1,7 +1,6 @@
 package com.example.pillalarm.ui.screen
 
 // I am importing the necessary libraries which are essential for my login screen implementation.
-
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
