@@ -27,7 +27,9 @@ import androidx.annotation.RequiresApi
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AlarmDialog(
-    medicineId: String, // We need the ID to load specific alarms
+    medicineId: String, // We need the ID to load specific medicines to specific alarms
+    medicineName: String,
+    medicineImageUrl: String,
     viewModel: AlarmViewModel, // Pass the ViewModel
     onDismiss: () -> Unit
 ) {
@@ -122,6 +124,8 @@ fun AlarmDialog(
                         // 4. Call ViewModel to add to DB
                         viewModel.addAlarm(
                             medicineId = medicineId,
+                            medicineName = medicineName,
+                            medicineImageUrl = medicineImageUrl,
                             hour = selectedHour,
                             minute = selectedMinute,
                             pm = isPM,

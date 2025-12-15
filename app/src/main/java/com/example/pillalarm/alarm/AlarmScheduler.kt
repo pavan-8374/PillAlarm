@@ -12,7 +12,7 @@ object AlarmScheduler {
     fun schedule(context: Context, alarm: AlarmEntity) {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        // FIX 1: Use the list directly (AlarmEntity now uses List<String>, not a CSV string)
+        // Use the days from the list directly (AlarmEntity now uses List<String>, not a CSV string)
         val days = alarm.days
 
         // Compute next trigger time
@@ -21,15 +21,16 @@ object AlarmScheduler {
 
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("alarmId", alarm.id)
-            putExtra("medicineName", alarm.medicineId)
+            putExtra("medicineName", alarm.medicineName)
+            putExtra("medicineImageUrl", alarm.medicineImageUrl)
         }
 
-        // FIX 2: Simplified flags (minSdk 24 means FLAG_IMMUTABLE is always available)
+        // Simplified flags (minSdk 24 means FLAG_IMMUTABLE is always available)
         val flags = PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
 
         val pi = PendingIntent.getBroadcast(context, alarm.id, intent, flags)
 
-        // FIX 3: Handle SecurityException for Android 12+ (API 31+)
+        //  Handle SecurityException for Android 12+ (API 31+)
         try {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 if (alarmManager.canScheduleExactAlarms()) {

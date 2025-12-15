@@ -23,6 +23,8 @@ class AlarmViewModel(private val repo: AlarmRepository, private val appContext: 
 
     @RequiresApi(Build.VERSION_CODES.S)
     fun addAlarm(medicineId: String,
+                 medicineName: String,
+                 medicineImageUrl: String,
                  hour: Int,
                  minute: Int,
                  pm: Boolean,
@@ -30,6 +32,8 @@ class AlarmViewModel(private val repo: AlarmRepository, private val appContext: 
         viewModelScope.launch {
             val entity = AlarmEntity(
                 medicineId = medicineId,
+                medicineName = medicineName,
+                medicineImageUrl = medicineImageUrl,
                 hour = hour,
                 minute = minute,
                 pm = pm,
