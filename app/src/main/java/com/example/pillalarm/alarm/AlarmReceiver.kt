@@ -28,7 +28,7 @@ class AlarmReceiver : BroadcastReceiver() {
         val medImage = intent.getStringExtra("medicineImageUrl")
         val alarmId = intent.getIntExtra("alarmId", -1)
 
-        // 1. Create the Full Screen Intent (AlarmActivity)
+        // Create the Full Screen Intent (AlarmActivity)
         val fullScreenIntent = Intent(context, AlarmActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
             putExtra("medicineName", medName)
@@ -42,11 +42,11 @@ class AlarmReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // 2. Create the Channel (Fix for 'Unresolved reference')
+        // Create the Channel (Fix for 'Unresolved reference')
         val channelId = "pill_alarm_channel"
         createNotificationChannel(context)
 
-        // 3. Build the Notification
+        // Build the Notification
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle("Pill Alarm")
@@ -56,7 +56,7 @@ class AlarmReceiver : BroadcastReceiver() {
             .setAutoCancel(true)
             .setFullScreenIntent(fullScreenPendingIntent, true) // Wakes screen
 
-        // 4. Show Notification
+        // Show Notification
         val notificationManager = NotificationManagerCompat.from(context)
 
         // Check permission for POST_NOTIFICATIONS (Android 13+)
