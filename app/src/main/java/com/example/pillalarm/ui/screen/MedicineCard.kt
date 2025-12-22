@@ -46,7 +46,7 @@ fun MedicineCard(
 
     Card(
         modifier = Modifier
-            .size(width = 140.dp, height = 170.dp)
+            .size(width = 140.dp, height = 190.dp)
             .padding(4.dp)
             .graphicsLayer {
                 rotationY = rotation.value
@@ -65,7 +65,7 @@ fun MedicineCard(
                     onAlarmClick = {
                         // Check exact alarm permission for Android 12+
                         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-                        // Note: If targeting Android 13/14, you might also need notification permissions check here
+                        // Note: If targeting Android 13/14, need notification permissions check here
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
                             val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
                             context.startActivity(intent)
@@ -83,7 +83,7 @@ fun MedicineCard(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Medicine") },
+            title = { Text("Delete") },
             text = { Text("Are you sure you want to delete this medicine?") },
             confirmButton = {
                 Button(onClick = {
@@ -126,7 +126,7 @@ fun FrontSide(medicine: Medicine) {
             contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(100.dp),
+                .height(120.dp),
             contentScale = ContentScale.Crop
         )
         Text(
@@ -162,7 +162,7 @@ fun BackSide(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
         ) {
-            Text("Delete Medicine")
+            Text("Delete")
         }
     }
 }

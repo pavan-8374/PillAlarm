@@ -1,5 +1,9 @@
 package com.example.pillalarm.alarm
 
+import android.annotation.SuppressLint
+import android.os.Build
+import android.widget.NumberPicker
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,8 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,16 +23,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.compose.ui.viewinterop.AndroidView
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun AlarmDialog(
-    medicineId: String, // We need the ID to load specific medicines to specific alarms
+    medicineId: String,
     medicineName: String,
     medicineImageUrl: String,
-    viewModel: AlarmViewModel, // Pass the ViewModel
+    viewModel: AlarmViewModel,
     onDismiss: () -> Unit
 ) {
     // 1. Load data when dialog opens
@@ -38,10 +39,10 @@ fun AlarmDialog(
         viewModel.load(medicineId)
     }
 
-    // 2. Observe the Live Data from Room Database
+    // 2. Observe data
     val savedAlarms by viewModel.alarms.collectAsState()
 
-    // 3. Local State for the "New Alarm" inputs
+    // 3. Local State
     var selectedHour by remember { mutableIntStateOf(12) }
     var selectedMinute by remember { mutableIntStateOf(0) }
     var isPM by remember { mutableStateOf(false) }
@@ -63,11 +64,11 @@ fun AlarmDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()), // Make content scrollable
+                    .verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
-                // --- TIME INPUT UI ---
+                // --- SCROLLABLE TIME INPUT UI ---
                 Text("Set Time", style = MaterialTheme.typography.labelLarge, color = Color.Gray, modifier = Modifier.align(Alignment.Start))
                 Spacer(modifier = Modifier.height(8.dp))
 
@@ -76,29 +77,53 @@ fun AlarmDialog(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    TimeSpinner(value = selectedHour, range = 1..12, onValueChange = { selectedHour = it })
-                    Text(":", fontSize = 24.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp))
-                    TimeSpinner(value = selectedMinute, range = 0..59, onValueChange = { selectedMinute = it }, format = { "%02d".format(it) })
-                    Spacer(modifier = Modifier.width(16.dp))
+                    // Hour Scroll Picker
+                    WheelTimePicker(
+                        value = selectedHour,
+                        range = 1..12,
+                        onValueChange = { selectedHour = it }
+                    )
 
+                    Text(":", fontSize = 32.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 8.dp))
+
+                    // Minute Scroll Picker
+                    WheelTimePicker(
+                        value = selectedMinute,
+                        range = 0..59,
+                        onValueChange = { selectedMinute = it }
+                    )
+
+                    Spacer(modifier = Modifier.width(24.dp))
+
+                    // --- AM/PM TOGGLE (Green for AM, Orange for PM) ---
                     Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
                             .clip(RoundedCornerShape(8.dp))
-                            .background(Color(0xFFE0E0E0))
+                            // Logic: AM = Green, PM = Orange
+                            .background(if (isPM) Color(0xFFFF9800) else Color(0xFFFF5722))
                             .clickable { isPM = !isPM }
-                            .padding(horizontal = 12.dp, vertical = 12.dp)
+                            .padding(horizontal = 16.dp, vertical = 12.dp)
                     ) {
-                        Text(text = if (isPM) "PM" else "AM", fontWeight = FontWeight.Bold, color = Color.Black)
+                        Text(
+                            text = if (isPM) "PM" else "AM",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White, // White text looks better on colored backgrounds
+                            fontSize = 18.sp
+                        )
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // --- DAYS SELECTION UI ---
+                // --- DAYS SELECTION UI (Orange when selected) ---
                 Text("Select Days", style = MaterialTheme.typography.labelLarge, color = Color.Gray, modifier = Modifier.align(Alignment.Start))
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     daysOfWeek.forEach { day ->
                         val isSelected = selectedDays.contains(day)
                         Box(
@@ -106,22 +131,26 @@ fun AlarmDialog(
                             modifier = Modifier
                                 .size(36.dp)
                                 .clip(CircleShape)
-                                .background(if (isSelected) MaterialTheme.colorScheme.primary else Color.LightGray)
+                                // when user selected = Orange, Unselected = Light Gray
+                                .background(if (isSelected) Color(0xFFFF5722) else Color.LightGray)
                                 .clickable {
                                     if (isSelected) selectedDays.remove(day) else selectedDays.add(day)
                                 }
                         ) {
-                            Text(text = day.take(1), color = if (isSelected) Color.White else Color.Black, fontWeight = FontWeight.Bold)
+                            Text(
+                                text = day.take(1),
+                                color = if (isSelected) Color.White else Color.Black,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // --- ADD BUTTON (Immediate Save) ---
+                // --- ADD BUTTON ---
                 Button(
                     onClick = {
-                        // 4. Call ViewModel to add to DB
                         viewModel.addAlarm(
                             medicineId = medicineId,
                             medicineName = medicineName,
@@ -131,10 +160,10 @@ fun AlarmDialog(
                             pm = isPM,
                             days = selectedDays.toList()
                         )
-                        // Reset inputs
                         selectedDays.clear()
                     },
                     enabled = selectedDays.isNotEmpty(),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Icon(Icons.Default.Add, contentDescription = null)
@@ -144,7 +173,7 @@ fun AlarmDialog(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // --- EXISTING ALARMS LIST (From ViewModel) ---
+                // --- ALARMS LIST ---
                 if (savedAlarms.isNotEmpty()) {
                     HorizontalDivider()
                     Spacer(modifier = Modifier.height(8.dp))
@@ -167,40 +196,43 @@ fun AlarmDialog(
     )
 }
 
-// Helper composable for the time spinners
-
+// Wraps standard Android NumberPicker to allow scrolling
+@SuppressLint("DefaultLocale")
 @Composable
-fun TimeSpinner(
+fun WheelTimePicker(
     value: Int,
     range: IntRange,
-    onValueChange: (Int) -> Unit,
-    format: (Int) -> String = { it.toString() }
+    onValueChange: (Int) -> Unit
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.width(48.dp)
-    ) {
-        IconButton(onClick = { if (value < range.last) onValueChange(value + 1) else onValueChange(range.first) }) {
-            Icon(Icons.Default.KeyboardArrowUp, contentDescription = "Up")
+    AndroidView(
+        modifier = Modifier.width(60.dp),
+        factory = { context ->
+            NumberPicker(context).apply {
+                minValue = range.first
+                maxValue = range.last
+                setFormatter { i -> String.format("%02d", i) } // Always 2 digits (e.g. 05)
+                wrapSelectorWheel = true
+                setOnValueChangedListener { _, _, newVal ->
+                    onValueChange(newVal)
+                }
+            }
+        },
+        update = { view ->
+            // Update the view if the state changes externally
+            if (view.value != value) {
+                view.value = value
+            }
         }
-        Text(text = format(value), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-        IconButton(onClick = { if (value > range.first) onValueChange(value - 1) else onValueChange(range.last) }) {
-            Icon(Icons.Default.KeyboardArrowDown, contentDescription = "Down")
-        }
-    }
+    )
 }
 
 // Display an individual AlarmEntity
 @Composable
 fun AlarmEntityRow(
-    // Assuming 'AlarmEntity' is your Room Entity class
     alarm: AlarmEntity,
     onDelete: () -> Unit
 ) {
-    // Construct display string from Entity fields
     val timeString = "${alarm.hour}:${"%02d".format(alarm.minute)} ${if(alarm.pm) "PM" else "AM"}"
-
     val daysDisplay = alarm.days.joinToString(", ")
 
     Card(
