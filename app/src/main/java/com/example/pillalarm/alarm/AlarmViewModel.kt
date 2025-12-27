@@ -60,7 +60,7 @@ class AlarmViewModel(private val repo: AlarmRepository, private val appContext: 
     }
 }
 
-// AlarmViewModelFactory for providing dependencies
+// AlarmViewModel Factory for providing dependencies
 class AlarmViewModelFactory(private val context: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         val repo = AlarmRepository(context)
