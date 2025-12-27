@@ -1,5 +1,7 @@
 package com.example.pillalarm.ui.screen
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
+@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyMedicinesScreen(navController: NavController) {
@@ -76,19 +79,11 @@ fun MyMedicinesScreen(navController: NavController) {
                             medicine = medicine,
                             onDeleteConfirmed = {
                                 MedicineRepository.delete(medicine.id)
-                            },
-                            onAlarmSaveList = { alarms ->
-                                MedicineRepository.updateAlarm(medicine.id, alarms)
                             }
                         )
-
-
                     }
                 }
             }
         }
     }
 }
-
-
-

@@ -133,7 +133,7 @@ fun HomeScreen(navController: NavController) {
 
                 if (medicineList.isEmpty()) {
                     Text("No medicines added yet.")
-            } else {
+                } else {
                     LazyVerticalGrid(
                         columns = GridCells.Adaptive(minSize = 150.dp),   //  responsive
                         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -145,32 +145,28 @@ fun HomeScreen(navController: NavController) {
                                 medicine = medicine,
                                 onDeleteConfirmed = {
                                     MedicineRepository.delete(medicine.id)
-                                },
-                                onAlarmSaveList = { alarms ->
-                                    MedicineRepository.updateAlarm(medicine.id, alarms)
                                 }
                             )
-
-
                         }
                     }
                 }
-
             }
         }
     }
+
 
     // Show Name Dialog
     if (showNameDialog && capturedImageUri != null) {
         MedicineDetailsDialog(
             onDismiss = { showNameDialog = false },
-            onSave = { name, time ->
+            onSave = { name ->
                 MedicineRepository.upload(
-                    context,
-                    capturedImageUri!!,
-                    name,
-                    time
-                )
+                    context = context,
+                    imageUri = capturedImageUri!!,
+                    name = name
+                ) { medicineId ->
+                    // medicineId returned from Firebase to schedule alarms
+                }
                 showNameDialog = false
             }
         )

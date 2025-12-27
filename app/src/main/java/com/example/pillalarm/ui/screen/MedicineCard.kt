@@ -1,40 +1,52 @@
 package com.example.pillalarm.ui.screen
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.text.input.KeyboardType
-import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import com.example.pillalarm.alarm.AlarmDialog
+import com.example.pillalarm.alarm.AlarmViewModel
+import com.example.pillalarm.alarm.AlarmViewModelFactory
 
+
+@SuppressLint("ObsoleteSdkInt")
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun MedicineCard(
     medicine: Medicine,
-    onDeleteConfirmed: () -> Unit,
-    onAlarmSaveList: (List<AlarmModel>) -> Unit
-
+    onDeleteConfirmed: () -> Unit
+    // Removed 'onAlarmSaveList' as the ViewModel handles DB operations now
 ) {
-    // UI States
+    val context = LocalContext.current
+
     var flipped by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
     var showAlarmDialog by remember { mutableStateOf(false) }
 
     val rotation = animateFloatAsState(
-        targetValue = if (flipped) 180f else 0f
+        targetValue = if (flipped) 180f else 0f,
+        label = "CardRotation"
     )
 
-    // Card with flip animation
     Card(
         modifier = Modifier
-            .size(width = 140.dp, height = 170.dp)
+            .size(width = 140.dp, height = 190.dp)
             .padding(4.dp)
             .graphicsLayer {
                 rotationY = rotation.value
@@ -44,28 +56,34 @@ fun MedicineCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp)
     ) {
         if (rotation.value <= 90f) {
-            // FRONT
             FrontSide(medicine)
         } else {
             Box(
-                modifier = Modifier.graphicsLayer {
-                    rotationY = 180f
-                }
+                modifier = Modifier.graphicsLayer { rotationY = 180f }
             ) {
-                // BACK MENU
                 BackSide(
-                    onAlarmClick = { showAlarmDialog = true },
+                    onAlarmClick = {
+                        // Check exact alarm permission for Android 12+
+                        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+                        // Note: If targeting Android 13/14, need notification permissions check here
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                            val intent = Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
+                            context.startActivity(intent)
+                        } else {
+                            showAlarmDialog = true
+                        }
+                    },
                     onDeleteClick = { showDeleteDialog = true }
                 )
             }
         }
     }
 
-    // Delete Confirmation Dialog
+    // --- Delete Confirmation Dialog ---
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Delete Medicine") },
+            title = { Text("Delete") },
             text = { Text("Are you sure you want to delete this medicine?") },
             confirmButton = {
                 Button(onClick = {
@@ -83,201 +101,68 @@ fun MedicineCard(
         )
     }
 
-    //Alarm Time Picker
+    // --- Alarm Schedule Dialog ---
     if (showAlarmDialog) {
-        AlarmPickerDialog(
-            onDismiss = { showAlarmDialog = false },
-            onSaveAll = { alarmList ->
-                onAlarmSaveList(alarmList)   // NEW CALLBACK
-                showAlarmDialog = false
-            }
+        // Create the ViewModel using the Factory
+        val alarmViewModel: AlarmViewModel = viewModel(
+            factory = AlarmViewModelFactory(context)
+        )
+
+        AlarmDialog(
+            medicineId = medicine.id, // Assuming Medicine class has an 'id' property
+            medicineName = medicine.name,
+            medicineImageUrl = medicine.imageUrl,
+            viewModel = alarmViewModel,
+            onDismiss = { showAlarmDialog = false }
         )
     }
 }
 
-    // FRONT SIDE (Medicine image + medicine name + Scheduled Alarms)
-    @Composable
-    fun FrontSide(medicine: Medicine) {
-        Column {
-            AsyncImage(
-                model = medicine.imageUrl,
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                contentScale = ContentScale.Crop
-            )
-
-            Text(
-                text = medicine.name,
-                modifier = Modifier.padding(8.dp),
-                style = MaterialTheme.typography.bodyMedium
-            )
-
-            // SHOW ALL SCHEDULED ALARMS
-            medicine.alarms.forEach { alarm ->
-                Text(
-                    text = "${alarm.formattedTime} — ${alarm.formattedDays}",
-                    modifier = Modifier.padding(horizontal = 8.dp),
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-        }
-    }
-
-    // BACK SIDE (menu with two buttons)
-    @Composable
-    fun BackSide(
-        onAlarmClick: () -> Unit,
-        onDeleteClick: () -> Unit
-    ) {
-        Column(
+@Composable
+fun FrontSide(medicine: Medicine) {
+    Column {
+        AsyncImage(
+            model = medicine.imageUrl,
+            contentDescription = null,
             modifier = Modifier
-                .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextButton(onClick = onAlarmClick) {
-                Text("Set Alarm")
-            }
-            TextButton(onClick = onDeleteClick) {
-                Text("Delete", color = MaterialTheme.colorScheme.error)
-            }
-        }
-
-    }
-
-    // Simple Alarm Input Dialog
-    @SuppressLint("MutableCollectionMutableState")
-    @OptIn(ExperimentalMaterial3Api::class)
-    @Composable
-    fun AlarmPickerDialog(
-        onDismiss: () -> Unit,
-        onSaveAll: (List<AlarmModel>) -> Unit
-    ) {
-        var alarms by remember { mutableStateOf(mutableListOf<AlarmModel>()) }
-
-        // UI state holder for NEW alarm being created
-        var hour by remember { mutableStateOf("") }
-        var minute by remember { mutableStateOf("") }
-        var isPM by remember { mutableStateOf(false) }
-        val daysOfWeek = listOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat")
-        var selectedDays by remember { mutableStateOf(mutableSetOf<String>()) }
-
-        AlertDialog(
-            onDismissRequest = onDismiss,
-            title = { Text("Medicine Alarm Schedule") },
-            text = {
-
-                Column {
-
-                    //
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-
-                        OutlinedTextField(
-                            value = hour,
-                            onValueChange = { hour = it },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            label = { Text("HH") },
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Spacer(Modifier.width(6.dp))
-
-                        OutlinedTextField(
-                            value = minute,
-                            onValueChange = { minute = it },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            label = { Text("MM") },
-                            modifier = Modifier.weight(1f)
-                        )
-
-                        Spacer(Modifier.width(8.dp))
-
-                        Switch(
-                            checked = isPM,
-                            onCheckedChange = { isPM = it }
-                        )
-                        Text(if (isPM) "PM" else "AM")
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    //-------------------- DAYS ROWS --------------------
-                    Text("Days:")
-                    Spacer(Modifier.height(4.dp))
-
-                    FlowRow {
-                        daysOfWeek.forEach { day ->
-                            FilterChip(
-                                selected = selectedDays.contains(day),
-                                onClick = {
-                                    if (selectedDays.contains(day)) {
-                                        selectedDays.remove(day)
-                                    } else {
-                                        selectedDays.add(day)
-                                    }
-                                },
-                                label = { Text(day) },
-                                modifier = Modifier.padding(2.dp)
-                            )
-                        }
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    //-------------------- ADD ALARM --------------------
-                    Button(
-                        onClick = {
-                            if (hour.isNotBlank() && minute.isNotBlank() && selectedDays.isNotEmpty()) {
-                                alarms.add(
-                                    AlarmModel(
-                                        hour = hour.toInt(),
-                                        minute = minute.toInt(),
-                                        isPM = isPM,
-                                        days = selectedDays.toList()
-                                    )
-                                )
-                                // Reset UI for next alarm
-                                hour = ""
-                                minute = ""
-                                isPM = false
-                                selectedDays.clear()
-                            }
-                        }
-                    ) {
-                        Text("+ Add Time Schedule")
-                    }
-
-                    Spacer(Modifier.height(12.dp))
-
-                    //-------------------- PREVIEW SAVED (INSIDE DIALOG) --------------------
-                    alarms.forEach { alarm ->
-                        Text(
-                            "${alarm.formattedTime} — ${alarm.formattedDays}",
-                            style = MaterialTheme.typography.bodySmall
-                        )
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    enabled = alarms.isNotEmpty(),
-                    onClick = {
-                        onSaveAll(alarms)
-                        onDismiss()
-                    }
-                ) {
-                    Text("Save All")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = onDismiss) { Text("Cancel") }
-            }
+                .fillMaxWidth()
+                .height(120.dp),
+            contentScale = ContentScale.Crop
+        )
+        Text(
+            text = medicine.name,
+            modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2
         )
     }
+}
 
+@Composable
+fun BackSide(
+    onAlarmClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(15.dp),
+        verticalArrangement = Arrangement.SpaceEvenly,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(
+            onClick = onAlarmClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("Set Alarm")
+        }
 
-
-
+        OutlinedButton(
+            onClick = onDeleteClick,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+        ) {
+            Text("Delete")
+        }
+    }
+}
