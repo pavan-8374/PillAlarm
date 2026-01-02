@@ -7,7 +7,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.tasks.await
 
-// Allows swapping between real Firebase and fake implementations.
+// This allows swapping between real Firebase and fake implementations.
 interface AuthRepository {
     suspend fun signIn(email: String, password: String)
 }

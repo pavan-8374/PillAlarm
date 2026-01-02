@@ -39,7 +39,7 @@ fun LoginScreen(
 
     var passwordVisible by remember { mutableStateOf(false) }
 
-    // show error as Toast (or show inline in UI)
+    // show error as Toast
     LaunchedEffect(errorMsg) {
         errorMsg?.let {
             if (!isInPreview) Toast.makeText(context, it, Toast.LENGTH_LONG).show()
@@ -47,7 +47,7 @@ fun LoginScreen(
     }
 
 
-    //  ----------------  This is UI layout (Composable)  -----------------
+    //  This is the UI for the login screen.
     
     Column(
         modifier = Modifier
@@ -99,7 +99,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 if (isInPreview) {
-                    // preview behavior: call success directly
+                    // preview behavior call success directly
                     onLoginSuccess()
                 } else {
                     loginViewModel.login(onLoginSuccess)
@@ -120,11 +120,10 @@ fun LoginScreen(
 }
 
 //This shows the preview of the login screen
-
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    // Use FakeAuthRepository so preview doesn’t call Firebase
+    // Using fake repo so preview doesn’t call Firebase
     val fakeRepo = FakeAuthRepository(succeed = true)
     val factory = LoginViewModel.Factory(fakeRepo)
     val vm: LoginViewModel = viewModel(factory = factory)
