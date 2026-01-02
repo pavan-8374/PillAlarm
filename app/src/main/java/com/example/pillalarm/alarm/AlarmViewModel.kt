@@ -40,11 +40,10 @@ class AlarmViewModel(private val repo: AlarmRepository, private val appContext: 
                 days = days
             )
             repo.addAlarm(entity)
-            // After insert, load again (to get generated id); simple approach: reload all
+            // After insert, load again (to get generated id).
             _alarms.value = repo.getAlarmsForMedicine(medicineId)
 
-            // schedule newly inserted alarm(s). Need id — Room returns rowId, but entity id isn't updated;
-            // so reload to find new alarms and schedule them. Simpler: schedule all alarms for this medicine.
+            // This schedule all alarms for this medicine id.
             repo.getAlarmsForMedicine(medicineId).forEach { AlarmScheduler.schedule(appContext, it) }
         }
     }
@@ -52,9 +51,9 @@ class AlarmViewModel(private val repo: AlarmRepository, private val appContext: 
     fun deleteAlarm(alarm: AlarmEntity) {
         viewModelScope.launch {
             repo.deleteAlarm(alarm)
-            // cancel scheduled alarm
+            // To cancel scheduled alarm
             AlarmScheduler.cancel(appContext, alarm)
-            // reload list
+            // To reload list
             _alarms.value = repo.getAlarmsForMedicine(alarm.medicineId)
         }
     }

@@ -6,6 +6,11 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
+/*
+ * Using Room, I have created a Data Access Object (DAO) for the AlarmEntity.
+ * This interface defines the methods that can be used to interact with the database.
+ * By using DAO objects we can insert, update, delete, and query the database.
+ */
 @Dao
 interface AlarmDao {
 

@@ -34,13 +34,13 @@ class AlarmActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 1. Wake the screen and dismiss keyguard
+        // Wake the screen and dismiss keyguard
         turnScreenOnAndKeyguardOff()
 
-        // 2. Start playing the alarm sound
+        // Start playing the default alarm sound
         startAlarmSound()
 
-        // 3. Get data from Intent
+        // Get data from Intent
         val medicineName = intent.getStringExtra("medicineName") ?: "Medicine"
         val medicineImageUrl = intent.getStringExtra("medicineImageUrl")
 
@@ -139,7 +139,7 @@ fun AlarmScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        // --- IMAGE SECTION ---
+        // Loads image from URL using Coil
         Card(
             modifier = Modifier
                 .size(200.dp)
@@ -175,7 +175,7 @@ fun AlarmScreenContent(
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // --- TEXT SECTION ---
+        // my app will display the medicine name
         Text(
             text = "Time to take:",
             style = MaterialTheme.typography.titleMedium,
@@ -193,7 +193,7 @@ fun AlarmScreenContent(
 
         Spacer(modifier = Modifier.height(64.dp))
 
-        // --- STOP BUTTON ---
+        // My app will display a button to stop the alarm
         Button(
             onClick = onStopClick,
             modifier = Modifier

@@ -29,7 +29,7 @@ import com.example.pillalarm.ui.theme.PillAlarmTheme
 
 class MainActivity : ComponentActivity() {
 
-    // PERMISSION LAUNCHER
+    // Permission launcher
     // This handles the user's choice (Allow vs Don't Allow) from the popup.
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -50,11 +50,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // CHECK PERMISSION ON LAUNCH
+        // Check permission for notifications
         // As soon as the app starts, we check if we need to ask for permission.
         askNotificationPermission()
 
-        // --- VIEWMODEL SETUP ---
+        // View model for login
         val repo = FirebaseAuthRepository()
         val factory = LoginViewModel.Factory(repo)
 
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // --- NAVIGATION GRAPH ---
+                    // Navigation process >> splash > login > signup > home
                     val navController = rememberNavController()
 
                     NavHost(
@@ -78,7 +78,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        composable("login") {
+                        composable("login") { // login screen
                             val loginVm: LoginViewModel = viewModel(factory = factory)
                             LoginScreen(
                                 onNavigateToSignUp = {
@@ -92,14 +92,14 @@ class MainActivity : ComponentActivity() {
                                 loginViewModel = loginVm
                             )
                         }
-                        composable("signup") {
+                        composable("signup") { // signup screen
                             SignupScreen(
                                 onNavigateToLogin = {
                                     navController.popBackStack()
                                 }
                             )
                         }
-                        composable("home") {
+                        composable("home") { // home screen
                             HomeScreen(navController = navController)
                         }
                         composable("my_medicines") {
@@ -110,15 +110,15 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    // HELPER FUNCTION
+    // Notification permission logic
     // This logic checks the Android version and current permission status.
     private fun askNotificationPermission() {
-        // This is only necessary for Android 13 (Tiramisu) and above
+        // This is only necessary for Android 13+ versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                // Permission is already granted. Do nothing.
+                // If permission is already granted. Do nothing.
             } else {
                 // Permission is missing. Launch the popup to ask the user.
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

@@ -44,7 +44,7 @@ import com.example.pillalarm.ui.theme.PillAlarmTheme
 fun SignupScreen(
     onNavigateToLogin: () -> Unit // This function will be passed in to handle navigation
 ) {
-    // --- State management ---
+    //  State variables to hold user input
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -111,7 +111,7 @@ fun SignupScreen(
             }
     }
 
-    //  ----------------   UI layout (Composable)  -----------------
+    //  UI for the signup screen
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -172,7 +172,7 @@ fun SignupScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // "Confirm Password" field
+        // Confirm Password field with error handling
         OutlinedTextField(
             value = confirmPassword,
             onValueChange = { confirmPassword = it; confirmPasswordError = null },

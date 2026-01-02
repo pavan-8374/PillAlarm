@@ -26,7 +26,7 @@ fun MyMedicinesScreen(navController: NavController) {
     val medicineList = remember { mutableStateListOf<Medicine>() }
     val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-    // Load all medicines for this user
+    // To load all medicines for this user
     LaunchedEffect(Unit) {
         if (userId != null) {
             FirebaseFirestore.getInstance().collection("medicines")
@@ -40,7 +40,6 @@ fun MyMedicinesScreen(navController: NavController) {
                             ?.copy(id = doc.id)
                             ?.let { medicineList.add(it) }
                     }
-
                 }
         }
     }

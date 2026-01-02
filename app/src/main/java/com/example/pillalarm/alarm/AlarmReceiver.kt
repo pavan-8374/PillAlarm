@@ -15,26 +15,41 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 
+/**
+ * AlarmReceiver is a BroadcastReceiver that triggers when an alarm goes off and shows
+ * a high-priority, full-screen alarm notification to wake the screen.
+ */
 class AlarmReceiver : BroadcastReceiver() {
 
     companion object {
-        private const val CHANNEL_ID = "pill_alarm_channel"
+        private const val CHANNEL_ID = "pill_alarm_channel" // Notification channel ID constant this helps for notifications
     }
 
+    /**
+     * Suppress lint warning about full-screen intent policy—be as alarms required
+     * Requires POST_NOTIFICATIONS permission on Android 13+. User will be prompted for permission.
+     */
     @SuppressLint("FullScreenIntentPolicy")
     @RequiresPermission(Manifest.permission.POST_NOTIFICATIONS)
     override fun onReceive(context: Context, intent: Intent) {
         val medName = intent.getStringExtra("medicineName") ?: "Medicine"
         val medImage = intent.getStringExtra("medicineImageUrl")
-        val alarmId = intent.getIntExtra("alarmId", -1)
+        val alarmId = intent.getIntExtra("alarmId", -1) // Unique alarmID to identify notifications
 
-        // Create the Full Screen Intent (AlarmActivity)
+        // An Intent to launch full-screen AlarmActivity when the notification is tapped
         val fullScreenIntent = Intent(context, AlarmActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NO_USER_ACTION
+            // This starts a fresh task to visibility and avoid stacking prior activities
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or
+                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                    Intent.FLAG_ACTIVITY_NO_USER_ACTION
+
+            // Pass along relevant extras for UI to display medicine name and image
             putExtra("medicineName", medName)
             putExtra("medicineImageUrl", medImage)
         }
-
+        // Create a PendingIntent for the full-screen activity.
+        // FLAG_IMMUTABLE is required on Android 12+
+        // UPDATE_CURRENT allows extras to refresh if reusing the same requestCode.
         val fullScreenPendingIntent = PendingIntent.getActivity(
             context,
             alarmId,
@@ -42,30 +57,34 @@ class AlarmReceiver : BroadcastReceiver() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Create the Channel (Fix for 'Unresolved reference')
+        // Create the Channel for notifications
         val channelId = "pill_alarm_channel"
         createNotificationChannel(context)
 
-        // Build the Notification
+        // High-priority, alarm-category notification that can present full-screen UI
         val notificationBuilder = NotificationCompat.Builder(context, channelId)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .setContentTitle("Pill Alarm")
             .setContentText("Time to take $medName")
-            .setPriority(NotificationCompat.PRIORITY_MAX)
-            .setCategory(NotificationCompat.CATEGORY_ALARM)
+            .setPriority(NotificationCompat.PRIORITY_MAX) // Max priority for heads-up/full-screen behavior
+            .setCategory(NotificationCompat.CATEGORY_ALARM) // Alarm-type notification
+            .setFullScreenIntent(fullScreenPendingIntent, true) // Wakes screen
             .setAutoCancel(true)
             .setFullScreenIntent(fullScreenPendingIntent, true) // Wakes screen
 
-        // Show Notification
+        // Shows alarm notification
         val notificationManager = NotificationManagerCompat.from(context)
 
-        // Check permission for POST_NOTIFICATIONS (Android 13+)
+        // Check permission for POST_NOTIFICATIONS (Android 13+) runtime permission is required to post notifications.
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
             notificationManager.notify(alarmId, notificationBuilder.build())
         }
     }
 
-
+    /**
+     * Creating the high-importance notification channel
+     * for alarm notifications and full-screen intents on Android 8.0+.
+     */
     private fun createNotificationChannel(context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name = "Medicine Alarm"

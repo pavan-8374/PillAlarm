@@ -32,7 +32,7 @@ object AlarmScheduler {
 
         Log.d("AlarmScheduler", "Scheduling alarm for: ${Calendar.getInstance().apply { timeInMillis = triggerTime }.time}")
 
-        // 2. Prepare the Intent
+        // Prepare the Intent
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             putExtra("medicineName", alarm.medicineName)
             putExtra("medicineImageUrl", alarm.medicineImageUrl)
@@ -46,7 +46,7 @@ object AlarmScheduler {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // 3. Set the Alarm using 'triggerTime'
+        // Set the Alarm using 'triggerTime'
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             alarmManager.setExactAndAllowWhileIdle(
                 AlarmManager.RTC_WAKEUP,
@@ -93,7 +93,7 @@ object AlarmScheduler {
             val c = Calendar.getInstance().apply {
                 set(Calendar.DAY_OF_WEEK, targetDayOfWeek)
 
-                // Convert 12-hour format to 24-hour for Calendar
+                // This convert 12-hour format to 24-hour for Calendar
                 var hour24 = hour12 % 12
                 if (isPm) hour24 += 12
 
