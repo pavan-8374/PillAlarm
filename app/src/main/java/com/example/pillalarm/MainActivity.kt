@@ -12,13 +12,19 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.pillalarm.auth.LoginViewModel
+import com.example.pillalarm.ui.screen.DisclaimerDialog
 import com.example.pillalarm.ui.screen.FirebaseAuthRepository
 import com.example.pillalarm.ui.screen.HomeScreen
 import com.example.pillalarm.ui.screen.LoginScreen
@@ -26,6 +32,7 @@ import com.example.pillalarm.ui.screen.MyMedicinesScreen
 import com.example.pillalarm.ui.screen.SignupScreen
 import com.example.pillalarm.ui.screen.SplashScreen
 import com.example.pillalarm.ui.theme.PillAlarmTheme
+import androidx.core.content.edit
 
 class MainActivity : ComponentActivity() {
 
@@ -51,7 +58,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Check permission for notifications
-        // As soon as the app starts, we check if we need to ask for permission.
         askNotificationPermission()
 
         // View model for login
@@ -64,9 +70,23 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Navigation process >> splash > login > signup > home
                     val navController = rememberNavController()
 
+
+                    // 1. SETUP TERMS OF SERVICE CHECK
+                    val context = LocalContext.current
+
+                    // Access internal storage (SharedPreferences) to remember if user agreed
+                    val sharedPreferences = remember {
+                        context.getSharedPreferences("app_prefs", MODE_PRIVATE)
+                    }
+
+                    // Check the saved value (Default is false)
+                    var hasAgreedToTerms by remember {
+                        mutableStateOf(sharedPreferences.getBoolean("terms_accepted", false))
+                    }
+
+                    // 2. MAIN APP CONTENT (Background)
                     NavHost(
                         navController = navController,
                         startDestination = "splash"
@@ -78,7 +98,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                        composable("login") { // login screen
+                        composable("login") {
                             val loginVm: LoginViewModel = viewModel(factory = factory)
                             LoginScreen(
                                 onNavigateToSignUp = {
@@ -92,35 +112,47 @@ class MainActivity : ComponentActivity() {
                                 loginViewModel = loginVm
                             )
                         }
-                        composable("signup") { // signup screen
+                        composable("signup") {
                             SignupScreen(
                                 onNavigateToLogin = {
                                     navController.popBackStack()
                                 }
                             )
                         }
-                        composable("home") { // home screen
+                        composable("home") {
                             HomeScreen(navController = navController)
                         }
                         composable("my_medicines") {
                             MyMedicinesScreen(navController)
                         }
                     }
+
+                    // 3. THE POPUP OVERLAY
+
+                    // If the user has NOT agreed yet, show the dialog on top of everything.
+                    if (!hasAgreedToTerms) {
+                        DisclaimerDialog(
+                            onAgreeClicked = {
+                                // 1. Save "true" to storage so it never shows again
+                                sharedPreferences.edit { putBoolean("terms_accepted", true) }
+                                // 2. Update state to dismiss the dialog immediately
+                                hasAgreedToTerms = true
+                            }
+                        )
+                    }
                 }
             }
         }
     }
+
     // Notification permission logic
-    // This logic checks the Android version and current permission status.
     private fun askNotificationPermission() {
-        // This is only necessary for Android 13+ versions
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
-                // If permission is already granted. Do nothing.
+                // Permission already granted
             } else {
-                // Permission is missing. Launch the popup to ask the user.
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }

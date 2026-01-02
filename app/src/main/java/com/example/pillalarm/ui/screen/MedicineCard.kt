@@ -110,7 +110,7 @@ fun MedicineCard(
     }
 
     if (showAlarmDialog) {
-        // Pass the SAME ViewModel so the dialog updates the card automatically
+        // Passing the medicine ID to the ViewModel so the dialog updates the card automatically
         AlarmDialog(
             medicineId = medicine.id,
             medicineName = medicine.name,
@@ -127,7 +127,7 @@ fun MedicineCard(
 @Composable
 fun FrontSide(
     medicine: Medicine,
-    alarms: List<AlarmEntity> // Change this type to match what your ViewModel returns (likely AlarmEntity)
+    alarms: List<AlarmEntity>
 ) {
     Column(
         modifier = Modifier.padding(bottom = 8.dp)
