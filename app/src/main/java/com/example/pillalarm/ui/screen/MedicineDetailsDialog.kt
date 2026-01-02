@@ -28,13 +28,13 @@ fun MedicineDetailsDialog(
                 Spacer(Modifier.height(10.dp))
             }
         },
-        confirmButton = {
+        confirmButton = { // Save button to save medicine name
             Button(
                 onClick = { onSave(name) },
                 enabled = name.isNotBlank()
             ) { Text("Save Medicine") }
         },
-        dismissButton = {
+        dismissButton = { // Cancel button to dismiss dialog
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }

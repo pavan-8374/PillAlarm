@@ -13,7 +13,7 @@ import java.util.Locale
 
 object ImageFiles {
 
-    // 1. Create a temporary file to hold the image
+    // Create a temporary file to hold the image
     fun createImageFile(context: Context): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir = context.getExternalFilesDir(null)
@@ -25,7 +25,7 @@ object ImageFiles {
         )
     }
 
-    // 2. Get the URI (Safe path) for the camera to use
+    // Get the URI (Safe path) for the camera to use
     fun getPhotoUri(context: Context, file: File): Uri {
         return FileProvider.getUriForFile(
             context,
@@ -34,7 +34,7 @@ object ImageFiles {
         )
     }
 
-    // 3. Compress the image (Crucial for fast uploads)
+    // Compress the image (Crucial for fast uploads)
     // Returns a ByteArray that can upload directly to Firebase
     fun reduceImageSize(context: Context, uri: Uri): ByteArray? {
         try {
@@ -42,7 +42,7 @@ object ImageFiles {
             val originalBitmap = BitmapFactory.decodeStream(inputStream)
 
             val outputStream = ByteArrayOutputStream()
-            // Compress to JPEG, 50% quality
+            // Compress to JPEG, 50% quality, this helps to reduce storage space and upload time.
             originalBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
             return outputStream.toByteArray()
         } catch (e: Exception) {

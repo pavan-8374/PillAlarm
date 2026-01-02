@@ -1,4 +1,4 @@
-# 💊 Visual Pill Alarm - Medication Reminder App
+#  Visual Pill Alarm - Medication Reminder App
 
 A robust Android application designed to help patients adhere to their medication schedules. The app allows users to capture images of their pills, set precise alarms for specific days of the week, and ensures reliable notifications even when the device is in sleep mode.
 
