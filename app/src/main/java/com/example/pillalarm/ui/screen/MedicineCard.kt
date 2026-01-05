@@ -124,6 +124,7 @@ fun MedicineCard(
 /**
  * Shows the front side of the card with the medicine image and name.
  */
+@SuppressLint("DefaultLocale")
 @Composable
 fun FrontSide(
     medicine: Medicine,
@@ -151,35 +152,41 @@ fun FrontSide(
 
             Spacer(modifier = Modifier.height(4.dp))
 
-            // Check the passed 'alarms' list instead of 'medicine.alarms'
             if (alarms.isNotEmpty()) {
+                // Show only the first 2 alarms to fit on the card
                 alarms.take(2).forEach { alarm ->
+
+                    val amPm = if (alarm.pm) "PM" else "AM"
+                    // Formats 8:5 to "8:05"
+                    val timeString = "${alarm.hour}:${String.format("%02d", alarm.minute)} $amPm"
+                    val daysString = alarm.days.joinToString(" ")
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        // You might need to format these manually if AlarmEntity doesn't have the properties
-                        val amPm = if(alarm.pm) "PM" else "AM"
-                        val time = "${alarm.hour}:${"%02d".format(alarm.minute)} $amPm"
-                        val days = alarm.days.joinToString(" ")
-
                         Text(
-                            text = days,
+                            text = daysString,
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 10.sp,
                             color = MaterialTheme.colorScheme.primary,
                             maxLines = 1
                         )
                         Text(
-                            text = time,
+                            text = timeString,
                             style = MaterialTheme.typography.bodySmall,
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
+                // If there are more than 2, show the count
                 if (alarms.size > 2) {
-                    Text(text = "+${alarms.size - 2} more", fontSize = 10.sp, color = Color.Gray)
+                    Text(
+                        text = "+${alarms.size - 2} more",
+                        fontSize = 10.sp,
+                        color = Color.Gray
+                    )
                 }
             } else {
                 Text(
