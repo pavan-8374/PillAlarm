@@ -64,18 +64,16 @@ Modern Android manufacturers use aggressive battery optimization that may kill b
 
 ##  Screenshots
 
-![Screenshot_2025-12-21-21-45-37-49_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/d5e7c652-7079-42a8-ad75-0cfbf649ce68)
-![Screenshot_2025-12-21-21-45-32-98_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/3cdc343b-9238-48ee-a7ab-3f60560566c2)
-![Screenshot_2025-12-21-21-45-27-21_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/503e4750-11a7-46b8-938b-1a28bff4690d)
-![Screenshot_2025-12-21-21-45-16-73_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/f47e08ec-345d-4f47-864f-8884eba4da98)
-![App permissions](https://github.com/user-attachments/assets/cb750d11-0996-406a-ba6c-009b9151c16f)
-<img width="164" height="346" alt="medicine cards" src="https://github.com/user-attachments/assets/698e3d9f-242c-4cf5-980d-72c6c607349c" />
-![1000124650](https://github.com/user-attachments/assets/92f16ec8-b1a6-46da-b573-15942d9148b1)
-<img width="158" height="350" alt="Schedule alarm" src="https://github.com/user-attachments/assets/e5a2e9b2-cbab-4f31-b54e-6ba6dc67422b" />
-<img width="161" height="348" alt="set_alarm" src="https://github.com/user-attachments/assets/1afe497d-3659-4840-abff-03e292fd09ea" />
+![2 app terms](https://github.com/user-attachments/assets/ad55b614-0ade-409e-b699-660fba4224ca)
+![Screenshot_2025-12-21-21-45-27-21_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/7239c020-b4be-4c91-90f1-4af108115d77)
 
+https://github.com/user-attachments/assets/5b36acf3-f274-40bb-8ba7-a06d130f2007![Screenshot_2026-01-02-17-27-09-17_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/f1ffea39-d862-4580-9247-fb1376e2cb88)
 
+![paracetamol](https://github.com/user-attachments/assets/5964ab23-38e2-412e-b4fb-1a666d6ea0eb)
+
+![Screenshot_2026-01-02-17-27-26-17_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/f0df3e84-457d-495c-84c5-c12f6d21339c)
+![Screenshot_2026-01-02-17-27-17-14_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/5e1145e0-2097-4674-a2da-9138273f3ec5)
 
 
 # Developed by: Rallapalli Pavan
-## Project Submitted for: Mobile App Development (CIS4034)
+## Project Submitted for: Mobile App Development
