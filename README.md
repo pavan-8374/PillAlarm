@@ -67,11 +67,15 @@ Modern Android manufacturers use aggressive battery optimization that may kill b
 ![2 app terms](https://github.com/user-attachments/assets/ad55b614-0ade-409e-b699-660fba4224ca)
 ![Screenshot_2025-12-21-21-45-27-21_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/7239c020-b4be-4c91-90f1-4af108115d77)
 
-![paracetamol](https://github.com/user-attachments/assets/5964ab23-38e2-412e-b4fb-1a666d6ea0eb)
+![Screenshot_2026-01-02-17-27-09-17_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/3853ebef-144a-4ca1-a4bf-751c63545463)
 
 ![Screenshot_2026-01-02-17-27-26-17_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/f0df3e84-457d-495c-84c5-c12f6d21339c)
 
 ![Screenshot_2026-01-02-17-27-17-14_b6681e21b68ac5e5728833553a5bf718](https://github.com/user-attachments/assets/5e1145e0-2097-4674-a2da-9138273f3ec5)
+
+![paracetamol](https://github.com/user-attachments/assets/5964ab23-38e2-412e-b4fb-1a666d6ea0eb)
+
+
 
 
 # Developed by: Rallapalli Pavan
